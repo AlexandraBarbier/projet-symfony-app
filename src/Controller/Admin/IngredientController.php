@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Ingredient;
-use App\Form\Ingredient1Type;
+use App\Form\IngredientType;
 use App\Repository\IngredientRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,7 +26,7 @@ class IngredientController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $ingredient = new Ingredient();
-        $form = $this->createForm(Ingredient1Type::class, $ingredient);
+        $form = $this->createForm(IngredientType::class, $ingredient);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -53,7 +53,7 @@ class IngredientController extends AbstractController
     #[Route('/{id}/edit', name: 'admin_ingredient_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Ingredient $ingredient, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(Ingredient1Type::class, $ingredient);
+        $form = $this->createForm(IngredientType::class, $ingredient);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
