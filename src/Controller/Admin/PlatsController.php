@@ -2,8 +2,10 @@
 
 namespace App\Controller\Admin;
 
+use App\DTO\SearchDishCriteria;
 use App\Entity\Plat;
 use App\Form\PlatType;
+use App\Form\SearchDishType;
 use App\Repository\PlatRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,10 +17,16 @@ use Symfony\Component\Routing\Annotation\Route;
 class PlatsController extends AbstractController
 {
     #[Route('/', name: 'admin_plats_index', methods: ['GET'])]
-    public function index(PlatRepository $platRepository): Response
+    public function index(PlatRepository $platRepository, Request $request): Response
     {
+        $DTO = new SearchDishCriteria;
+        $form = $this->createForm(SearchDishType::class, $DTO);
+
+        $form->handleRequest($request);
+
         return $this->render('admin/plats/index.html.twig', [
-            'plats' => $platRepository->findTenOfPageTwoOrderedByPrice(),
+            'plats' => $platRepository->findAllByCriteria($DTO),
+            'form' => $form->createView()
         ]);
     }
 

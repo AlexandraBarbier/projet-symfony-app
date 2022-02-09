@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Plat;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\DTO\SearchDishCriteria;
+use App\Form\SearchDishType;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Plat|null find($id, $lockMode = null, $lockVersion = null)
@@ -18,6 +20,26 @@ class PlatRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Plat::class);
     }
+
+
+    //recupere les infos du formulaire de recherche
+    public function findAllByCriteria(SearchDishCriteria $DTO): array
+    {
+        $qb = $this->createQueryBuilder('dish');
+
+        if($DTO->title) {
+            $qb
+            ->andWhere('dish.name LIKE :title')
+            ->setParameter('title', '%' . $DTO->title . '%');
+        }
+
+        return $qb
+            ->setMaxResults($DTO->limit)
+            ->setFirstResult($DTO->limit * ($DTO->page) -1)
+            ->getQuery()
+            ->getResult();
+    }
+
 
     //recuperer touts les plats ordonné par prix croissants
     public function findAllByPriceAscOrder(): array
