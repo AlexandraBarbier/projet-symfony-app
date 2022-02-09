@@ -35,7 +35,8 @@ class SearchDishType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => SearchDishCriteria::class,
-            'method' => 'GET'
+            'method' => 'GET',
+            'csrf_protection' => false
         ]);
     }
 }
